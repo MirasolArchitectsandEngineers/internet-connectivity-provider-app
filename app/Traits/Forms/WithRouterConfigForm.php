@@ -4,9 +4,9 @@ namespace App\Traits\Forms;
 
 use App\Models\RouterConfig;
 use Carbon\CarbonPeriod;
-use Filament\Forms\Components\{Repeater, Section, Select, TextInput, TimePicker};
+use Filament\Forms\Components\{Repeater, Section, Select, TagsInput, TextInput, TimePicker};
 use Filament\Forms\{Form, Get, Set};
-use Illuminate\Support\{Carbon, Str};
+use Illuminate\Support\{Carbon};
 use Livewire\Attributes\Computed;
 
 trait WithRouterConfigForm
@@ -32,16 +32,32 @@ trait WithRouterConfigForm
                         ->rules(['max:255'])
                         ->columnSpan(2)
                         ->autofocus(),
-                ])->columnSpan(2)
+                ])
+                    ->columnSpan(2)
                     ->columns(2),
                 $this->routerConfigRuleRepeater('data_limit', 'Data Limit'),
                 $this->routerConfigRuleRepeater('download_speed_limit', 'Download Speed Limit'),
                 $this->routerConfigRuleRepeater('upload_speed_limit', 'Upload Speed Limit'),
                 $this->routerConfigRuleRepeater('disable_access', 'Disable Access'),
                 Section::make()->schema([
-                    TextInput::make('sites_allowed'),
-                    TextInput::make('sites_denied'),
-                ]),
+                    TagsInput::make('sites_allowed')
+                        ->label('Sites Allowed')
+                        ->validationAttribute('Sites Allowed')
+                        ->placeholder('')
+                        ->splitKeys(['Enter'])
+                        ->columnSpan(2),
+                    TagsInput::make('sites_denied')
+                        ->label('Sites Denied')
+                        ->validationAttribute('Sites Denied')
+                        ->prohibited(function (Get $get) {
+                            return count($get('sites_allowed'));
+                        })
+                        ->placeholder('')
+                        ->splitKeys(['Enter'])
+                        ->columnSpan(2),
+                ])
+                    ->columnSpan(2)
+                    ->columns(2),
             ])->statePath('input');
     }
 
