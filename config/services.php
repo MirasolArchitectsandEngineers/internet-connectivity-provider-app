@@ -71,7 +71,7 @@ return [
     ],
 
     'duration_units' => [
-        '' => 'N/A',
+        'n/a' => 'N/A',
         'day' => 'Daily',
         'week' => 'Weekly',
         'month' => 'Monthly',
