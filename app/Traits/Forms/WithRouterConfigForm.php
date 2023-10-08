@@ -68,8 +68,8 @@ trait WithRouterConfigForm
             ->schema([
                 TextInput::make('value')
                     ->validationAttribute('Value')
-                    ->requiredIf(function () use ($name) {
-                        return 'disable_access' != $name;
+                    ->requiredIf(function (Get $get) use ($name) {
+                        return 'disable_access' != $name || 'n/a' != $get('unit');
                     }, null)
                     ->rules(['nullable', 'integer', 'min:0', 'max:999999'])
                     ->label('Value (Mbps)')
@@ -87,11 +87,11 @@ trait WithRouterConfigForm
                             }
 
                             if (
-                                collect($get("../..{$name}"))
+                                collect($get("../../{$name}"))
                                     ->where('unit', '=', $value)
                                     ->count() > 1
                             ) {
-                                $fail('The :attribute field has a duplicate value');
+                                $fail('The :attribute field has duplicate value');
                             }
                         },
                     ])
