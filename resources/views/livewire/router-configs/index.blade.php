@@ -52,4 +52,6 @@
       @endif
     </x-table-wrapper>
   </x-container>
+
+  @livewire('router-configs.delete')
 </div>
