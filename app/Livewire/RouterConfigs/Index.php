@@ -4,7 +4,7 @@ namespace App\Livewire\RouterConfigs;
 
 use App\Models\RouterConfig;
 use App\Traits\WithSorting;
-use Livewire\Attributes\{Title, Url};
+use Livewire\Attributes\{On, Title, Url};
 use Livewire\{Component, WithPagination};
 
 class Index extends Component
@@ -16,6 +16,7 @@ class Index extends Component
     public $search;
 
     #[Title('Router Configurations')]
+    #[On('router-config-deleted')]
     public function render()
     {
         $routerConfigs = RouterConfig::when($this->search, function ($query, $value) {

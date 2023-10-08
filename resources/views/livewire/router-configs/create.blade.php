@@ -8,7 +8,8 @@
 
   <x-container>
     <form wire:submit="store"
-      novalidate class="grid grid-cols-3 gap-4">
+      novalidate
+      class="grid grid-cols-3 gap-4">
       <div class="col-span-2">{{ $this->routerConfigForm }}</div>
       <x-dialog-footer class="col-span-2">
         <x-secondary-link-button href="{{ route('router-configs.index') }}"

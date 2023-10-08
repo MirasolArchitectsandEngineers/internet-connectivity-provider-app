@@ -35,6 +35,7 @@ Route::middleware([
     ], function () {
         Route::get('', \App\Livewire\RouterConfigs\Index::class)->name('index');
         Route::get('create', \App\Livewire\RouterConfigs\Create::class)->name('create');
+        Route::get('{routerConfig}', \App\Livewire\RouterConfigs\Update::class)->name('update');
     });
 
     Route::get('ticket-templates', [TicketTemplateController::class, 'index'])->name('ticket-template.index');

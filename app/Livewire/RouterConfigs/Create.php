@@ -50,6 +50,8 @@ class Create extends Component implements HasForms
                 'options' => null,
             ],
         ],
+        'sites_allowed' => [],
+        'sites_denied' => [],
     ];
 
     public function render()
