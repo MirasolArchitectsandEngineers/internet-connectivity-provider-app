@@ -29,12 +29,12 @@
             @foreach ($routerConfigs as $routerConfig)
               <x-tr wire:key="{{ $routerConfig->id }}">
                 <x-td class="flex items-center -m-2">
-                  <x-button-link class="flex items-center p-2"
-                    title="View / Edit"
-                    wire:click="$dispatch('edit-router-config', { id: {{ $routerConfig->id }}})">
+                  <x-link href="{{ route('router-configs.update', $routerConfig) }}"
+                    class="flex items-center p-2"
+                    title="View / Edit">
                     <x-icon name="fas-eye"
                       class="w-4 h-4" />
-                  </x-button-link>
+                  </x-link>
                   <x-danger-button-link class="flex items-center p-2"
                     title="Delete"
                     wire:click="$dispatch('delete-router-config', { id: {{ $routerConfig->id }} })">
