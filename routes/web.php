@@ -38,6 +38,13 @@ Route::middleware([
         Route::get('{routerConfig}', \App\Livewire\RouterConfigs\Update::class)->name('update');
     });
 
+    Route::group([
+        'as' => 'device-groups.',
+        'prefix' => 'users',
+    ], function () {
+        Route::get('create', \App\Livewire\DeviceUserGroups\Create::class)->name('create');
+    });
+
     Route::get('ticket-templates', [TicketTemplateController::class, 'index'])->name('ticket-template.index');
 
     Route::group([
