@@ -13,6 +13,8 @@ trait WithRouterConfigForm
 {
     public $routerConfigId;
 
+    public $routerConfigUsage = false;
+
     #[Computed]
     public function routerConfig()
     {
@@ -26,13 +28,15 @@ trait WithRouterConfigForm
                 Section::make()->schema([
                     TextInput::make('name')
                         ->validationAttribute('Name')
-                        ->required()
+                        ->required(! $this->routerConfigUsage)
+                        ->prohibited(fn () => $this->routerConfigUsage)
                         ->string()
                         ->unique(RouterConfig::class, 'name', fn () => $this->routerConfig)
                         ->rules(['max:255'])
                         ->columnSpan(2)
                         ->autofocus(),
                 ])
+                    ->hidden(fn () => $this->routerConfigUsage)
                     ->columnSpan(2)
                     ->columns(2),
                 $this->routerConfigRuleRepeater('data_limit', 'Data Limit'),
@@ -49,9 +53,7 @@ trait WithRouterConfigForm
                     TagsInput::make('sites_denied')
                         ->label('Sites Denied')
                         ->validationAttribute('Sites Denied')
-                        ->prohibited(function (Get $get) {
-                            return count($get('sites_allowed'));
-                        })
+                        ->prohibited(fn (Get $get) => count($get('sites_allowed')))
                         ->placeholder('')
                         ->splitKeys(['Enter'])
                         ->columnSpan(2),
@@ -68,14 +70,10 @@ trait WithRouterConfigForm
             ->schema([
                 TextInput::make('value')
                     ->validationAttribute('Value')
-                    ->requiredIf(function (Get $get) use ($name) {
-                        return 'disable_access' != $name || 'n/a' != $get('unit');
-                    }, null)
+                    ->required(fn (Get $get) => 'disable_access' != $name || 'n/a' != $get('unit'))
                     ->rules(['nullable', 'integer', 'min:0', 'max:999999'])
                     ->label('Value (Mbps)')
-                    ->hidden(function () use ($name) {
-                        return 'disable_access' == $name;
-                    }),
+                    ->hidden(fn () => 'disable_access' == $name),
                 Select::make('unit')
                     ->validationAttribute('Unit')
                     ->required()
@@ -105,20 +103,14 @@ trait WithRouterConfigForm
                 TimePicker::make('from')
                     ->validationAttribute('From')
                     ->requiredIf('unit', 'day')
-                    ->prohibited(function (Get $get) {
-                        return 'day' != $get('unit');
-                    })
+                    ->prohibited(fn (Get $get) => 'day' != $get('unit'))
                     ->rules(['date_format:H:i'])
                     ->seconds(false)
-                    ->hidden(function (Get $get) {
-                        return 'day' != $get('unit');
-                    }),
+                    ->hidden(fn (Get $get) => 'day' != $get('unit')),
                 TimePicker::make('to')
                     ->validationAttribute('To')
                     ->requiredIf('unit', 'day')
-                    ->prohibited(function (Get $get) {
-                        return 'day' != $get('unit');
-                    })
+                    ->prohibited(fn (Get $get) => 'day' != $get('unit'))
                     ->after('from')
                     ->rules([
                         'bail',
@@ -151,21 +143,15 @@ trait WithRouterConfigForm
                         },
                     ])
                     ->seconds(false)
-                    ->hidden(function (Get $get) {
-                        return 'day' != $get('unit');
-                    }),
+                    ->hidden(fn (Get $get) => 'day' != $get('unit')),
                 Select::make('options')
                     ->validationAttribute('Days')
                     ->label('Days')
                     ->requiredIf('unit', 'week')
-                    ->prohibited(function (Get $get) {
-                        return 'week' != $get('unit');
-                    })
+                    ->prohibited(fn (Get $get) => 'week' != $get('unit'))
                     ->options(weekDays())
                     ->multiple()
-                    ->hidden(function (Get $get) {
-                        return 'week' != $get('unit');
-                    })->columnSpan(2),
+                    ->hidden(fn (Get $get) => 'week' != $get('unit'))->columnSpan(2),
             ])
             ->columnSpan(2)
             ->columns(4)
